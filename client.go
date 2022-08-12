@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"bytes"
+	"encoding/base64"
 )
 
 type Page struct {
@@ -17,11 +18,14 @@ func main() {
 	page1 := Page{"https://www.nairaland.com/7106890/software-engineering-journey-alx-africa"}
 	page1json, err := json.Marshal(page1)
 	logError(err)
-	page, err := http.Post("http://localhost:8000/", "application/json", bytes.NewBuffer(page1json))
+	//fmt.Printf("%s\n", page1json)
+	page, err := http.Post("http://localhost:2069/", "application/json", bytes.NewBuffer(page1json))
 	logError(err)
 	pagetext, err := ioutil.ReadAll(page.Body)
 	logError(err)
-	fmt.Printf("%s", pagetext)
+	pagetext_b64, err := base64.StdEncoding.DecodeString(string(pagetext))
+	logError(err)
+	fmt.Printf("%s\n", pagetext_b64)
 }
 
 func logError(err error) {

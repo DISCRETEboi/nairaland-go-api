@@ -6,6 +6,7 @@ import (
 	"log"
 	"io/ioutil"
 	"encoding/json"
+	"encoding/base64"
 )
 
 type Page struct {
@@ -14,8 +15,8 @@ type Page struct {
 
 func main() {
 	http.HandleFunc("/", handler)
-	fmt.Println("Listening on localhost:8000")
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	fmt.Println("Listening on localhost:2069")
+	log.Fatal(http.ListenAndServe("localhost:2069", nil))
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +25,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	logError(err)
 	err = json.Unmarshal(rbody, &page1)
 	logError(err)
-	w.Write([]byte(page1.Url))
+	page1_b64 := base64.StdEncoding.EncodeToString([]byte(page1.Url))
+	w.Write([]byte(page1_b64))
 }
 
 func logError(err error) {
