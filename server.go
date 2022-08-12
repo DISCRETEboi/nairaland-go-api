@@ -25,12 +25,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	logError(err)
 	err = json.Unmarshal(rbody, &page1)
 	logError(err)
-	page1_b64 := base64.StdEncoding.EncodeToString([]byte(page1.Url))
+	//page1_b64 := base64.StdEncoding.EncodeToString([]byte(page1.Url))
+	nrlnd_page, err := ioutil.ReadFile("new-nairaland-page.pdf")
+	logError(err)
+	page1_b64 := base64.StdEncoding.EncodeToString([]byte(nrlnd_page))
 	w.Write([]byte(page1_b64))
 }
 
 func logError(err error) {
 	if err != nil {
-		log.Fatal("Error encountered!", err)
+		log.Fatal("Error encountered! :-", err)
 	}
 }

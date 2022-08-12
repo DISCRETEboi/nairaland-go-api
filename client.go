@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"log"
 	"net/http"
 	"io/ioutil"
@@ -25,11 +25,13 @@ func main() {
 	logError(err)
 	pagetext_b64, err := base64.StdEncoding.DecodeString(string(pagetext))
 	logError(err)
-	fmt.Printf("%s\n", pagetext_b64)
+	//fmt.Printf("%s\n", pagetext_b64)
+	err = ioutil.WriteFile("server-sent-npage.pdf", []byte(pagetext_b64), 0644)
+	logError(err)
 }
 
 func logError(err error) {
 	if err != nil {
-		log.Fatal("Error encountered!", err)
+		log.Fatal("Error encountered! :-", err)
 	}
 }
