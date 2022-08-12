@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"log"
 	"net/http"
 	"io/ioutil"
@@ -15,7 +15,12 @@ type Page struct {
 }
 
 func main() {
-	page1 := Page{"https://www.nairaland.com/7106890/software-engineering-journey-alx-africa"}
+	//page1 := Page{"https://www.nairaland.com/7106890/software-engineering-journey-alx-africa"}
+	var link string
+	fmt.Println("Enter the link to be processed below (to process a default link, just press Enter) ")
+	fmt.Print("Link >>> ")
+	fmt.Scanf("%s", &link)
+	page1 := Page{link}
 	page1json, err := json.Marshal(page1)
 	logError(err)
 	//fmt.Printf("%s\n", page1json)
