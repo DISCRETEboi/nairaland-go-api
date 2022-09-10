@@ -24,7 +24,8 @@ func main() {
 	logError(err)
 	//fmt.Printf("%s\n", page1json)
 	fmt.Println("Making HTTP request ...")
-	page, err := http.Post("http://localhost:2069/", "application/json", bytes.NewBuffer(page1json))
+	//page, err := http.Post("http://etp4ma.octamile.com:9602/", "application/json", bytes.NewBuffer(page1json))
+	page, err := http.Post("http://localhost:9602/", "application/json", bytes.NewBuffer(page1json))
 	logError(err)
 	fmt.Println("HTTP request successful!")
 	fmt.Println("Reading and decoding HTTP response content ...")
@@ -33,7 +34,7 @@ func main() {
 	pagetext_b64, err := base64.StdEncoding.DecodeString(string(pagetext))
 	logError(err)
 	//fmt.Printf("%s\n", pagetext_b64)
-	err = ioutil.WriteFile("server-sent-npage.pdf", []byte(pagetext_b64), 0644)
+	err = ioutil.WriteFile("client-files/server-sent-npage.pdf", []byte(pagetext_b64), 0644)
 	logError(err)
 	fmt.Println("The pdf file is saved in the current working directory as 'server-sent-npage.pdf'!")
 	var ent string
