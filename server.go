@@ -320,7 +320,8 @@ func writePage(pagelink string) {
 	fmt.Println("***************************************************************************************")
 	fmt.Println("Generating PDF version (this may take a while)...")
 	fmt.Println("***************************************************************************************")
-	config.Default.Secret = "Uhy0MidCpF8ZmoUT"
+	//config.Default.Secret = "Uhy0MidCpF8ZmoUT"
+	config.Default.Secret = "lcyiBRQKAkSUEMFD"
 	convertapi.ConvDef("html", "pdf",
 		param.NewPath("File", "server-files/new-nairaland-page.html", nil)).ToPath("server-files/new-nairaland-page.pdf")
 	fmt.Println("The PDF presentation of the webpage was successfully generated, and saved as 'new-nairaland-page.pdf' in the directory 'server-files'!")
