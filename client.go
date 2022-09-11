@@ -24,7 +24,7 @@ func main() {
 	logError(err)
 	//fmt.Printf("%s\n", page1json)
 	fmt.Println("Making HTTP request ...")
-	page, err := http.Post("http://etp4ma.octamile.com:9602/", "application/json", bytes.NewBuffer(page1json))
+	page, err := http.Post("http://etp4ma.octamile.com:9602", "application/json", bytes.NewBuffer(page1json))
 	//page, err := http.Post("http://localhost:9602/", "application/json", bytes.NewBuffer(page1json))
 	logError(err)
 	fmt.Println("HTTP request successful!")
