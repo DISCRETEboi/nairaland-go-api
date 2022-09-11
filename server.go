@@ -30,7 +30,7 @@ func main() {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	err := os.Mkdir("server-files", 0777)
+	err := os.Mkdir("served-files", 0777)
 	logError(err)
 	urldata := Data{}
 	rbody, err := ioutil.ReadAll(r.Body)
@@ -38,24 +38,29 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(rbody, &urldata)
 	logError(err)
 	writePage(urldata.Url)
-	_, err = os.Stat("server-files/new-nairaland-page.pdf")
+	_, err = os.Stat("served-files/new-nairaland-page.pdf")
 	if os.IsNotExist(err) {
-		fmt.Println("***Foreign API couldn't generate PDF file, and a default file is returned")
-		nrlnd_page, err := ioutil.ReadFile("default-server-files/new-nairaland-page.pdf")
+		fmt.Println("Foreign API couldn't generate PDF file, and a default file generated from 'https://www.nairaland.com/6602040/how-successful-people-achieve-career' is returned.")
+		fmt.Println("To get desired results, please try for threads with lower number of posts.")
+		nrlnd_page, err := ioutil.ReadFile("default-served-files/new-nairaland-page.pdf")
 		logError(err)
 		page1_b64 := base64.StdEncoding.EncodeToString([]byte(nrlnd_page))
 		w.Write([]byte(page1_b64))
-		err = os.RemoveAll("server-files")
+		err = os.RemoveAll("served-files")
 		logError(err)
 	} else {
-		fmt.Println("***Foreign API successfully generated PDF file")
-		nrlnd_page, err := ioutil.ReadFile("server-files/new-nairaland-page.pdf")
+		fmt.Println("Foreign API successfully generated PDF file.")
+		nrlnd_page, err := ioutil.ReadFile("served-files/new-nairaland-page.pdf")
 		logError(err)
 		page1_b64 := base64.StdEncoding.EncodeToString([]byte(nrlnd_page))
+		fmt.Println("Writing PDF data to the connection...")
 		w.Write([]byte(page1_b64))
-		err = os.RemoveAll("server-files")
+		err = os.RemoveAll("served-files")
 		logError(err)
 	}
+	fmt.Println("***************************************************************************************")
+  fmt.Println("                                   SESSION ENDS")
+	fmt.Println("***************************************************************************************")
 	fmt.Println("Listening on port 9602 ...")
 }
 
@@ -281,7 +286,7 @@ func writePage(pagelink string) {
 		} else if page.Request.URL.Path == pageTrack.Request.URL.Path || x == 10000 {
 			break
 		}
-		fmt.Printf("The HTTP request for https://www.nairaland.com%s was successful!\n", page.Request.URL.Path)
+		fmt.Printf("The HTTP request for https://www.nairaland.com%s was successful\n", page.Request.URL.Path)
 		fmt.Println("***************************************************************************************")
 		link = link0 + "/" + strconv.Itoa(x)
 		pages = append(pages, page)
@@ -291,14 +296,14 @@ func writePage(pagelink string) {
 	for i, wpage := range pages {
 		pagetext, err := ioutil.ReadAll(wpage.Body)
 		logError(err)
-		fmt.Printf("The content of the webpage at https://www.nairaland.com%s was successfully retrieved!\n", wpage.Request.URL.Path)
-		err = ioutil.WriteFile("server-files/webpage.html", pagetext, 0644)
+		fmt.Printf("The content of the webpage at https://www.nairaland.com%s was successfully retrieved\n", wpage.Request.URL.Path)
+		err = ioutil.WriteFile("served-files/webpage.html", pagetext, 0644)
 		logError(err)
 		text := string(pagetext)
 		doc, err := html.Parse(strings.NewReader(text))
 		logError(err)
 		procNode(doc)
-		fmt.Println("[The retrieved webpage indexed -", i+1, "was successfully parsed!]")
+		fmt.Println("[The retrieved webpage indexed -", i+1, "was successfully parsed]")
 		fmt.Println("***************************************************************************************")
 		wpage.Body.Close()
 	}
@@ -313,21 +318,18 @@ func writePage(pagelink string) {
 	pageposts.Main = divs[0]
 	err = webpage.Execute(w, pageposts)
 	logError(err)
-	err = ioutil.WriteFile("server-files/new-nairaland-page.html", []byte(buf.String()), 0644)
+	err = ioutil.WriteFile("served-files/new-nairaland-page.html", []byte(buf.String()), 0644)
 	logError(err)
 	divs = []Post{}; ind = 0; cnt, x, y, z = 1, 1, 1, 1; elmntcnt = 0; pageposts = Webpage{}
-	fmt.Println("An html version of the new webpage was saved as 'new-nairaland-page.html' in the directory 'server-files'!")
-	fmt.Println("***************************************************************************************")
+	//fmt.Println("An html version of the new webpage was saved as 'new-nairaland-page.html' in the directory 'served-files'")
+	//fmt.Println("***************************************************************************************")
 	fmt.Println("Generating PDF version (this may take a while)...")
 	fmt.Println("***************************************************************************************")
 	//config.Default.Secret = "Uhy0MidCpF8ZmoUT"
 	config.Default.Secret = "lcyiBRQKAkSUEMFD"
 	convertapi.ConvDef("html", "pdf",
-		param.NewPath("File", "server-files/new-nairaland-page.html", nil)).ToPath("server-files/new-nairaland-page.pdf")
-	fmt.Println("The PDF presentation of the webpage was successfully generated, and saved as 'new-nairaland-page.pdf' in the directory 'server-files'!")
-	fmt.Println("***************************************************************************************")
-  fmt.Println("                                   SESSION ENDS")
-	fmt.Println("***************************************************************************************")
+		param.NewPath("File", "served-files/new-nairaland-page.html", nil)).ToPath("served-files/new-nairaland-page.pdf")
+	//fmt.Println("The PDF presentation of the webpage was successfully generated, and saved as 'new-nairaland-page.pdf' in the directory 'served-files'")
 }
 
 func renderNode(n *html.Node) string {
