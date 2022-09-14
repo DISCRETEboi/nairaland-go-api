@@ -23,15 +23,16 @@ func main() {
 	page1json, err := json.Marshal(page1)
 	logError(err)
 	//fmt.Printf("%s\n", page1json)
-	fmt.Println("Making HTTP request ...")
+	fmt.Println("HTTP request sent [waiting for server response]...")
 	page, err := http.Post("http://etp4ma.octamile.com:9602", "application/json", bytes.NewBuffer(page1json))
 	//page, err := http.Post("http://localhost:9602/", "application/json", bytes.NewBuffer(page1json))
 	logError(err)
-	fmt.Println("HTTP request successful!")
-	fmt.Println("Reading and decoding HTTP response content ...")
+	fmt.Println("HTTP response successfully received from server!")
+	fmt.Println("Reading HTTP response content...")
 	pagetext, err := ioutil.ReadAll(page.Body)
 	logError(err)
 	page.Body.Close()
+	fmt.Println("Decoding HTTP response content...")
 	pagetext_b64, err := base64.StdEncoding.DecodeString(string(pagetext))
 	logError(err)
 	//fmt.Printf("%s\n", pagetext_b64)
@@ -39,7 +40,7 @@ func main() {
 	logError(err)
 	fmt.Println("The pdf file is saved in the current working directory as 'server-sent-npage.pdf'!")
 	var ent string
-	fmt.Print("Press Enter to exit ...")
+	fmt.Print("Press Enter to exit...")
 	fmt.Scanf("%s", &ent)
 }
 
